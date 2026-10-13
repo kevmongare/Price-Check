@@ -42,12 +42,38 @@ function isProductTitle(value) {
   const title = String(value || "").trim();
   if (title.length < 4) return false;
   if (/^(?:www\.)?jumia(?:\.co\.ke)?$/i.test(title)) return false;
-  return !/(access denied|verify you are human|captcha)/i.test(title);
+  return !/(access denied|verify you are human|captcha|no results found|there are no results|just a moment)/i.test(title);
 }
 
 function isSkuLike(value) {
   const term = String(value || "").trim();
   return term.length >= 8 && /\d/.test(term) && /^[a-z0-9-]+$/i.test(term);
+}
+
+function searchVariants(value) {
+  const original = String(value || "").trim();
+  if (!original || isSkuLike(original)) return original ? [original] : [];
+  const words = tokens(original);
+  const variants = [original];
+  const add = candidate => {
+    if (candidate && !variants.some(variant => variant.toLowerCase() === candidate.toLowerCase())) variants.push(candidate);
+  };
+  for (let size = Math.min(words.length - 1, 6); size >= 3; size--) add(words.slice(0, size).join(" "));
+  if (words.length >= 4) add(words.slice(1).join(" "));
+  return variants;
+}
+
+function classifyQueryMatch(query, candidate) {
+  if (isSkuLike(query)) {
+    return String(candidate?.url || "").toLowerCase().includes(String(query).toLowerCase())
+      ? "Exact match"
+      : "Possible match — review required";
+  }
+  const result = score(query, candidate?.title);
+  const queryHasSpecs = tokens(query).some(hasDigit);
+  if (result.similarity >= 0.8 && result.brandMatch && (!queryHasSpecs || result.specsMatch)) return "High-confidence equivalent";
+  if (result.similarity >= 0.4) return "Possible match — review required";
+  return "Not comparable";
 }
 
 function selectClosest(query, candidates) {
@@ -74,4 +100,4 @@ function selectLowestPriceMatch(productTitle, candidates) {
   return ranked[0]?.candidate || null;
 }
 
-module.exports = { classify, isProductTitle, score, selectClosest, selectLowestPriceMatch, tokens };
+module.exports = { classify, classifyQueryMatch, isProductTitle, score, searchVariants, selectClosest, selectLowestPriceMatch, tokens };

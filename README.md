@@ -10,6 +10,7 @@
    The run also keeps `results.csv` / `results.json` as a downloadable artifact on the run page.
 
 Note: in a public repo, SKUs, counts.csv and results are public. Don't commit sensitive cancellation data there.
+Before hosted runs, add your ScraperAPI key as the repository Actions secret `SCRAPER_API_KEY` (Settings > Secrets and variables > Actions). The key is never stored in the source files; ScraperAPI usage limits or billing apply.
 If the run fails with "runner is probably being blocked", the retailers are rejecting GitHub's servers; run locally instead.
 
 ## Local

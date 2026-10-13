@@ -1,7 +1,8 @@
 // Shared retrieval + matching logic (used by server.js and batch.js).
 "use strict";
 const { chromium } = require("playwright");
-const { classify, isProductTitle, selectClosest, selectLowestPriceMatch, tokens } = require("./matching");
+const { classify, classifyQueryMatch, isProductTitle, searchVariants, selectClosest, selectLowestPriceMatch, tokens } = require("./matching");
+const { gotoWithScraperApi } = require("./scraper-api");
 
 const HEADLESS = process.env.HEADLESS !== "0"; // HEADLESS=0 to watch the browser
 const NAV_TIMEOUT = 30000;
@@ -63,24 +64,40 @@ function extractListings(hrefPattern, limit) {
 // ---------- Jumia: product name or SKU -> closest product title/price/url ----------
 async function jumiaLookup(searchTerm) {
   return withPage(async page => {
-    await page.goto("https://www.jumia.co.ke/catalog/?q=" + encodeURIComponent(searchTerm), { waitUntil: "domcontentloaded" });
-    await page.waitForSelector("article.prd a.core, h1", { timeout: 15000 }).catch(() => {});
-    const results = await page.evaluate(() => Array.from(document.querySelectorAll("article.prd a.core")).map(a => {
-      const title = a.querySelector(".name")?.textContent?.trim() || a.getAttribute("data-name") || "";
-      const priceText = a.querySelector(".prc")?.textContent?.trim() || "";
-      return { title, priceText, url: a.href };
-    }).filter(result => result.title));
-    const closest = selectClosest(searchTerm, results.filter(result => isProductTitle(result.title)));
-    if (closest) return { ...closest, price: toNum(closest.priceText) };
+    let closest = null, closestConfidence = "Not found", closestRank = 0;
+    const confidenceRank = { "Exact match": 4, "High-confidence equivalent": 3, "Possible match — review required": 2, "Not comparable": 1, "Not found": 0 };
+    for (const query of searchVariants(searchTerm)) {
+      const targetUrl = "https://www.jumia.co.ke/catalog/?q=" + encodeURIComponent(query);
+      await gotoWithScraperApi(page, targetUrl);
+      await page.waitForSelector("article.prd a.core, h1", { timeout: 15000 }).catch(() => {});
+      const results = await page.evaluate(() => Array.from(document.querySelectorAll("article.prd a.core")).map(a => {
+        const title = a.querySelector(".name")?.textContent?.trim() || a.getAttribute("data-name") || "";
+        const priceText = a.querySelector(".prc")?.textContent?.trim() || "";
+        return { title, priceText, url: a.href };
+      }).filter(result => result.title));
+      const candidate = selectClosest(searchTerm, results.filter(result => isProductTitle(result.title)));
+      if (candidate) {
+        const confidence = classifyQueryMatch(searchTerm, candidate);
+        const rank = confidenceRank[confidence] || 0;
+        if (rank > closestRank) { closest = candidate; closestConfidence = confidence; closestRank = rank; }
+        if (confidence === "Exact match" || confidence === "High-confidence equivalent") break;
+      }
 
-    const productPage = await page.evaluate(() => {
-      if (location.pathname.includes("/catalog/")) return null;
-      const title = document.querySelector("h1")?.textContent?.trim() || "";
-      const priceText = document.querySelector("span.-b.-ubpt, .-fs24.-b, [class*='-ubpt']")?.textContent?.trim() || "";
-      return title ? { title, priceText, url: location.href } : null;
-    });
-    if (productPage && isProductTitle(productPage.title)) return { ...productPage, price: toNum(productPage.priceText) };
-    return null;
+      const productPage = await page.evaluate(() => {
+        if (document.querySelector("article.prd a.core")) return null;
+        const title = document.querySelector("h1")?.textContent?.trim() || "";
+        const priceText = document.querySelector("span.-b.-ubpt, .-fs24.-b, [class*='-ubpt']")?.textContent?.trim() || "";
+        const url = document.querySelector('link[rel="canonical"]')?.href || location.href;
+        return title ? { title, priceText, url } : null;
+      });
+      if (productPage && isProductTitle(productPage.title)) {
+        const confidence = classifyQueryMatch(searchTerm, productPage);
+        const rank = confidenceRank[confidence] || 0;
+        if (rank > closestRank) { closest = productPage; closestConfidence = confidence; closestRank = rank; }
+        if (confidence === "Exact match" || confidence === "High-confidence equivalent") break;
+      }
+    }
+    return closest ? { ...closest, price: toNum(closest.priceText), query_match_confidence: closestConfidence } : null;
   });
 }
 
@@ -92,7 +109,7 @@ const SITES = {
 async function searchSite(site, query) {
   const cfg = SITES[site];
   return withPage(async page => {
-    await page.goto(cfg.url(query), { waitUntil: "domcontentloaded" });
+    await gotoWithScraperApi(page, cfg.url(query));
     await page.waitForLoadState("networkidle", { timeout: 12000 }).catch(() => {});
     await page.waitForTimeout(1500);
     const rows = await page.evaluate(extractListings, [cfg.href, 12]).catch(() => []);
@@ -127,6 +144,12 @@ async function checkSku(sku) {
   try { j = await jumiaLookup(sku); } catch (e) { out.retrieval_status = "Jumia lookup failed: " + e.message; return out; }
   if (!j) { out.retrieval_status = "SKU not found on Jumia (no results, or page blocked/changed)"; return out; }
   out.product_name = j.title; out.jumia_price = j.price; out.jumia_url = j.url;
+  out.query_match_confidence = j.query_match_confidence;
+  if (j.query_match_confidence !== "Exact match" && j.query_match_confidence !== "High-confidence equivalent") {
+    out.match_confidence = j.query_match_confidence;
+    out.retrieval_status = `Closest Jumia result requires review: ${j.title}. Competitor prices were not compared.`;
+    return out;
+  }
 
   const results = await Promise.all(Object.keys(SITES).map(async site => {
     try { return [site, await bestCandidate(site, j.title)]; }

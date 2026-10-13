@@ -33,9 +33,9 @@ main{max-width:1440px;margin:22px auto;padding:0 20px 36px}.banner{padding:13px 
  <div class="layout">
   <aside>
    <section class="panel">
-    <h2>1. Enter top-cancelled SKUs</h2>
-    <label class="field-label" for="skuInput">Paste SKUs</label>
-    <textarea id="skuInput" placeholder="One SKU per line, or paste a column from Excel&#10;Example: AI234HA6251MGNAFAMZ"></textarea>
+    <h2>1. Enter products to check</h2>
+    <label class="field-label" for="skuInput">Paste product names or SKUs</label>
+    <textarea id="skuInput" placeholder="One product name or SKU per line, or paste a column from Excel&#10;Example: Samsung Galaxy A55 256GB"></textarea>
     <div class="hint">Accepts line breaks, commas, semicolons, tabs, and pasted spreadsheet columns. Duplicate entries are removed automatically.</div>
     <div class="buttons">
      <button class="btn primary" id="runBtn">Run Competitor Price Check</button>
@@ -61,7 +61,7 @@ main{max-width:1440px;margin:22px auto;padding:0 20px 36px}.banner{padding:13px 
    <section class="panel">
     <h2>How to use the results</h2>
     <div class="summary">
-     <div class="summary-item"><strong>1. Run</strong><p>Paste SKUs; the backend finds each Jumia listing and searches competitors.</p></div>
+    <div class="summary-item"><strong>1. Run</strong><p>Paste product names or SKUs; the closest Jumia result is matched against competitor listings.</p></div>
      <div class="summary-item"><strong>2. Review</strong><p>Spot-check the matched listings (links in each row).</p></div>
      <div class="summary-item"><strong>3. Add volumes</strong><p>Import a CSV with cancellation counts, then re-run.</p></div>
      <div class="summary-item"><strong>4. Prioritise</strong><p>Use price gaps alongside cancellation impact.</p></div>
@@ -86,7 +86,7 @@ main{max-width:1440px;margin:22px auto;padding:0 20px 36px}.banner{padding:13px 
     </div>
     <div class="table-wrap">
      <table><thead><tr>
-      <th>SKU / product</th><th>Jumia</th><th>Carrefour</th><th>Kilimall</th><th>Cheapest competitor</th><th>Jumia premium</th><th>Match</th><th>Cancellation impact</th><th>Priority / action</th><th>Sources / status</th>
+    <th>Search term / product</th><th>Jumia</th><th>Carrefour</th><th>Kilimall</th><th>Cheapest competitor</th><th>Jumia premium</th><th>Match</th><th>Cancellation impact</th><th>Priority / action</th><th>Sources / status</th>
      </tr></thead><tbody id="resultsBody"><tr><td colspan="10"><div class="empty">No results yet. Paste SKUs and run the batch, or load sample data to preview the dashboard.</div></td></tr></tbody></table>
     </div>
     <div class="footnote">Price premium = (Jumia price − cheapest comparable competitor price) ÷ cheapest competitor price. Calculations are shown only when prices are positive numbers and a comparable match is confirmed. Shipping is excluded unless supplied as part of the price.</div>
@@ -120,7 +120,7 @@ function parseSkus(){const raw=$("skuInput").value.split(/[\n\r,;\t]+/).map(s=>s
 function searchURL(site,term){const q=encodeURIComponent(term);if(site==="Jumia")return "https://www.jumia.co.ke/catalog/?q="+q;if(site==="Carrefour")return "https://www.carrefour.ke/mafken/en/search?keyword="+q;return "https://www.kilimall.co.ke/new/commoditysearch?keyword="+q;}
 function normalise(r){
  const o={...r};
- o.sku=String(o.sku||"").trim();o.product_name=o.product_name||"";o.jumia_price=parseNumber(o.jumia_price);o.carrefour_price=parseNumber(o.carrefour_price);o.kilimall_price=parseNumber(o.kilimall_price);
+ o.sku=String(o.sku||r.search_term||"").trim();o.search_term=String(r.search_term||o.sku).trim();o.product_name=o.product_name||"";o.jumia_price=parseNumber(o.jumia_price);o.carrefour_price=parseNumber(o.carrefour_price);o.kilimall_price=parseNumber(o.kilimall_price);
  o.cancellation_count=parseNumber(o.cancellation_count);o.cancellation_reason=o.cancellation_reason||"Not supplied";
  o.match_confidence=o.match_confidence||"Possible match — review required";
  o.source_type=o.source_type||"Manual / imported";o.checked_at=o.checked_at||"Not recorded";
@@ -170,7 +170,7 @@ function render(){
   const count=r.cancellation_count===null?"Not supplied":r.cancellation_count.toLocaleString();
   const matchClass=r.match_confidence==="Exact match"||r.match_confidence==="High-confidence equivalent"?"good":r.match_confidence.startsWith("Possible")?"warn":"";
   const src=`<div>${pill(r.source_type,r.source_type==="Sample data"?"warn":r.source_type==="Live retrieved"?"good":"blue")}</div><div class="subtext">${escapeHTML(r.checked_at)}</div><div class="subtext">${link(r.jumia_url,"Jumia")||link(searchURL("Jumia",r.sku),"Search Jumia")} · ${link(r.carrefour_url,"Carrefour")||link(searchURL("Carrefour",r.product_name||r.sku),"Search Carrefour")} · ${link(r.kilimall_url,"Kilimall")||link(searchURL("Kilimall",r.product_name||r.sku),"Search Kilimall")}</div>`;
-  return `<tr><td><div class="product">${escapeHTML(r.product_name||"Product not identified")}</div><div class="subtext">SKU: ${escapeHTML(r.sku)}</div><div class="subtext">${escapeHTML(r.cancellation_reason)}</div></td><td>${priceCell(r.jumia_price,r.jumia_url,"Jumia")}</td><td>${priceCell(r.carrefour_price,r.carrefour_url,"Carrefour")}</td><td>${priceCell(r.kilimall_price,r.kilimall_url,"Kilimall")}</td><td>${cheap}</td><td>${premium}</td><td>${pill(r.match_confidence,matchClass)}</td><td><strong>${escapeHTML(count)}</strong><div class="subtext">cancellations</div></td><td>${actionPill(r)}<div class="subtext">${escapeHTML(r.reason)}</div></td><td>${src}</td></tr>`;
+    return `<tr><td><div class="product">${escapeHTML(r.product_name||"Product not identified")}</div><div class="subtext">Search: ${escapeHTML(r.sku)}</div><div class="subtext">${escapeHTML(r.cancellation_reason)}</div></td><td>${priceCell(r.jumia_price,r.jumia_url,"Jumia")}</td><td>${priceCell(r.carrefour_price,r.carrefour_url,"Carrefour")}</td><td>${priceCell(r.kilimall_price,r.kilimall_url,"Kilimall")}</td><td>${cheap}</td><td>${premium}</td><td>${pill(r.match_confidence,matchClass)}</td><td><strong>${escapeHTML(count)}</strong><div class="subtext">cancellations</div></td><td>${actionPill(r)}<div class="subtext">${escapeHTML(r.reason)}</div></td><td>${src}</td></tr>`;
  }).join("");
  renderSummary(all);
 }
@@ -216,7 +216,7 @@ async function runBatch(){
 function csvEscape(v){const s=String(v??"");return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
 function downloadCSV(rows,filename){
  if(!rows.length){alert("There are no results to export.");return;}
- const cols=["sku","product_name","jumia_price","carrefour_price","kilimall_price","cancellation_count","cancellation_reason","match_confidence","source_type","checked_at","jumia_url","carrefour_url","kilimall_url","retrieval_status"];
+ const cols=["search_term","sku","product_name","jumia_price","carrefour_price","kilimall_price","cancellation_count","cancellation_reason","match_confidence","source_type","checked_at","jumia_url","carrefour_url","kilimall_url","retrieval_status"];
  const csv=[cols.join(","),...rows.map(r=>cols.map(c=>csvEscape(r[c])).join(","))].join("\r\n");
  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
@@ -226,7 +226,7 @@ function parseCSV(text){
  if(field.length||row.length){row.push(field);rows.push(row);}
  if(!rows.length)return [];
  const headers=rows.shift().map(h=>h.trim().toLowerCase());
- return rows.filter(r=>r.some(v=>v.trim())).map(r=>{const o={};headers.forEach((h,i)=>o[h]=(r[i]||"").trim());return o;}).filter(o=>o.sku);
+ return rows.filter(r=>r.some(v=>v.trim())).map(r=>{const o={};headers.forEach((h,i)=>o[h]=(r[i]||"").trim());o.sku=o.sku||o.search_term||"";o.search_term=o.search_term||o.sku;return o;}).filter(o=>o.sku);
 }
 $("runBtn").addEventListener("click",runBatch);
 $("stopBtn").addEventListener("click",()=>{stopRequested=true;$("stopBtn").disabled=true;});
@@ -245,7 +245,7 @@ $("sampleBtn").addEventListener("click",()=>{
 });
 $("exportBtn").addEventListener("click",()=>downloadCSV(records.map(assess),"jumia_competitor_price_check.csv"));
 $("templateBtn").addEventListener("click",()=>{
- const template="sku,product_name,jumia_price,carrefour_price,kilimall_price,cancellation_count,cancellation_reason,match_confidence,source_type,checked_at,jumia_url,carrefour_url,kilimall_url,retrieval_status\n";
+ const template="search_term,sku,product_name,jumia_price,carrefour_price,kilimall_price,cancellation_count,cancellation_reason,match_confidence,source_type,checked_at,jumia_url,carrefour_url,kilimall_url,retrieval_status\n";
  const blob=new Blob(["\ufeff"+template],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="competitor_price_import_template.csv";a.click();URL.revokeObjectURL(url);
 });
 $("csvInput").addEventListener("change",async e=>{

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       skus:
-        description: "SKUs (comma or newline separated). Leave empty to use skus.txt"
+        description: "Product names or SKUs (comma or newline separated). Leave empty to use skus.txt"
         required: false
         default: ""
   schedule:
@@ -32,6 +32,7 @@ jobs:
         with:
           node-version: 20
       - run: npm install
+      - run: npm test
       - run: npx playwright install --with-deps chromium
       - name: Run price check
         env:

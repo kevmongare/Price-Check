@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jumia Kenya | Competitor Pricing Intelligence</title>
+<style>
+:root{--ink:#17212b;--muted:#667085;--line:#dfe5eb;--bg:#f4f7fa;--card:#fff;--blue:#2463eb;--blue2:#1748b5;--green:#137a52;--amber:#9a6700;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:22px max(22px,calc((100% - 1440px)/2));display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:12px;background:#f7a600;color:#1e293b;font-weight:900;display:grid;place-items:center;font-size:20px}
+h1{font-size:21px;margin:0 0 3px}h2{font-size:16px;margin:0 0 12px}p{margin:0;color:var(--muted)}.header-meta{font-size:12px;color:var(--muted);text-align:right}
+main{max-width:1440px;margin:22px auto;padding:0 20px 36px}.banner{padding:13px 15px;background:#fff8e6;border:1px solid #f4d58a;border-radius:10px;color:#704d00;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:minmax(280px,350px) minmax(0,1fr);gap:16px;align-items:start}.panel,.metric{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 2px 6px #10182808}
+.panel{padding:18px;margin-bottom:16px}.field-label{font-weight:700;display:block;margin-bottom:7px}textarea,input,select{font:inherit;color:var(--ink);border:1px solid #cbd5e1;border-radius:8px;padding:10px;width:100%;background:#fff}textarea{min-height:210px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+.hint{font-size:12px;color:var(--muted);margin-top:7px}.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.btn{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:700;cursor:pointer;background:white;color:var(--ink)}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue2)}.btn:disabled{opacity:.5;cursor:not-allowed}.btn.small{padding:6px 9px;font-size:12px}
+.status{margin-top:13px;padding:10px;border-radius:8px;background:#f8fafc;color:var(--muted);font-size:12px}.progress{height:7px;background:#e8edf3;border-radius:8px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+.metric-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}.metric{padding:14px}.metric .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}.metric .num{font-size:25px;font-weight:800;margin-top:5px;word-break:break-word}.metric .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.toolbar input{max-width:270px}.toolbar select{width:auto;min-width:145px}.toolbar .spacer{flex:1}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;background:#fff;min-width:1050px}th{background:#f8fafc;color:#475467;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.035em;white-space:nowrap;position:sticky;top:0;z-index:1}td,th{padding:11px 10px;border-bottom:1px solid #edf0f4;vertical-align:top}td{font-size:12px}tbody tr:hover{background:#fafcff}.product{font-weight:700;min-width:180px;max-width:260px}.subtext{font-size:11px;color:var(--muted);margin-top:4px}.price{font-weight:800;white-space:nowrap}.positive{color:var(--green)}.negative{color:var(--red)}.neutral{color:var(--muted)}.pill{display:inline-block;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800;white-space:nowrap;background:#eef2f6;color:#475467}.pill.good{background:#e7f6ee;color:#11633f}.pill.warn{background:#fff4d6;color:#805b00}.pill.bad{background:#feeceb;color:#a32118}.pill.blue{background:#eaf1ff;color:#214db5}a{color:#2158c9;text-decoration:none}a:hover{text-decoration:underline}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}.summary{display:grid;grid-template-columns:1fr 1fr;gap:12px}.summary-item{background:#f8fafc;border-radius:9px;padding:12px}.summary-item strong{display:block;margin-bottom:4px}.summary-item p{font-size:12px}.footnote{font-size:11px;color:var(--muted);margin-top:12px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.count{font-size:12px;color:var(--muted)}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){main{padding:0 12px 24px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:16px}.header-meta{text-align:left}.metric .num{font-size:21px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">J</div><div><h1>Competitor Pricing Intelligence</h1><p>Jumia Kenya · Customer cancellation investigation</p></div></div>
+ <div class="header-meta">Commercial Analytics Workspace<br>Automated via local backend</div>
+</header>
+<main>
+ <div class="banner"><strong>Data integrity note:</strong> Prices are retrieved automatically (weekly GitHub Actions run, or the local backend). Only high-confidence product matches feed the price comparison; weaker matches are listed in the status column for review. Retrieval depends on the retailer pages and may need selector updates. Sample data is labelled clearly.</div>
+ <div class="layout">
+  <aside>
+   <section class="panel">
+    <h2>1. Enter top-cancelled SKUs</h2>
+    <label class="field-label" for="skuInput">Paste SKUs</label>
+    <textarea id="skuInput" placeholder="One SKU per line, or paste a column from Excel&#10;Example: AI234HA6251MGNAFAMZ"></textarea>
+    <div class="hint">Accepts line breaks, commas, semicolons, tabs, and pasted spreadsheet columns. Duplicate entries are removed automatically.</div>
+    <div class="buttons">
+     <button class="btn primary" id="runBtn">Run Competitor Price Check</button>
+     <button class="btn" id="stopBtn" disabled>Stop</button>
+    </div>
+    <div class="buttons">
+     <button class="btn" id="sampleBtn">Load Sample Data</button>
+     <button class="btn" id="clearBtn">Clear</button>
+    </div>
+    <div class="status" id="runStatus" role="status">Ready. Enter SKUs and run the batch, or load clearly labelled sample data.
+     <div class="progress"><span id="progressBar"></span></div>
+     <div id="progressText" style="margin-top:6px">0 of 0 processed</div>
+    </div>
+   </section>
+   <section class="panel">
+    <h2>2. Import verified prices (optional)</h2>
+    <p style="font-size:12px;margin-bottom:12px">Use a CSV when prices have been verified manually or collected from an approved source. Imported prices are labelled as imported data.</p>
+    <label class="field-label" for="csvInput">Select CSV file</label>
+    <input type="file" id="csvInput" accept=".csv,text/csv">
+    <div class="hint">Expected columns: sku, jumia_price, carrefour_price, kilimall_price. Optional: product_name, jumia_url, carrefour_url, kilimall_url, cancellation_count, cancellation_reason, match_confidence, checked_at.</div>
+    <div class="buttons"><button class="btn" id="templateBtn">Download CSV Template</button></div>
+   </section>
+   <section class="panel">
+    <h2>How to use the results</h2>
+    <div class="summary">
+     <div class="summary-item"><strong>1. Run</strong><p>Paste SKUs; the backend finds each Jumia listing and searches competitors.</p></div>
+     <div class="summary-item"><strong>2. Review</strong><p>Spot-check the matched listings (links in each row).</p></div>
+     <div class="summary-item"><strong>3. Add volumes</strong><p>Import a CSV with cancellation counts, then re-run.</p></div>
+     <div class="summary-item"><strong>4. Prioritise</strong><p>Use price gaps alongside cancellation impact.</p></div>
+    </div>
+   </section>
+  </aside>
+  <section>
+   <div class="metric-grid">
+    <div class="metric"><div class="label">SKUs in results</div><div class="num" id="mTotal">0</div><div class="sub">Unique products</div></div>
+    <div class="metric"><div class="label">Competitor cheaper</div><div class="num" id="mCheaper">0</div><div class="sub">Comparable prices entered</div></div>
+    <div class="metric"><div class="label">Verified / high match</div><div class="num" id="mMatched">0</div><div class="sub">Match status supplied</div></div>
+    <div class="metric"><div class="label">Needs review</div><div class="num" id="mReview">0</div><div class="sub">Incomplete or uncertain</div></div>
+    <div class="metric"><div class="label">Retrieval failures</div><div class="num" id="mFailed">0</div><div class="sub">No usable price data</div></div>
+   </div>
+   <section class="panel">
+    <div class="section-head"><div><h2 style="margin-bottom:3px">Commercial opportunity review</h2><p style="font-size:12px">Ranked view of available evidence. A lower competitor price is not proof of cancellation causation.</p></div><div class="count" id="resultCount">0 records</div></div>
+    <div class="toolbar" style="margin-top:14px">
+     <input id="searchFilter" placeholder="Search SKU or product name">
+     <select id="matchFilter"><option value="all">All match statuses</option><option>Exact match</option><option>High-confidence equivalent</option><option>Possible match — review required</option><option>Not comparable</option><option>Not found</option></select>
+     <select id="actionFilter"><option value="all">All action priorities</option><option>Immediate commercial investigation</option><option>Pricing review</option><option>Product/journey review</option><option>Insufficient evidence</option></select>
+     <div class="spacer"></div><button class="btn primary" id="exportBtn">Download Results CSV</button> <button class="btn" id="reportBtn">Download Report (HTML)</button>
+    </div>
+    <div class="table-wrap">
+     <table><thead><tr>
+      <th>SKU / product</th><th>Jumia</th><th>Carrefour</th><th>Kilimall</th><th>Cheapest competitor</th><th>Jumia premium</th><th>Match</th><th>Cancellation impact</th><th>Priority / action</th><th>Sources / status</th>
+     </tr></thead><tbody id="resultsBody"><tr><td colspan="10"><div class="empty">No results yet. Paste SKUs and run the batch, or load sample data to preview the dashboard.</div></td></tr></tbody></table>
+    </div>
+    <div class="footnote">Price premium = (Jumia price − cheapest comparable competitor price) ÷ cheapest competitor price. Calculations are shown only when prices are positive numbers and a comparable match is confirmed. Shipping is excluded unless supplied as part of the price.</div>
+   </section>
+   <section class="panel">
+    <h2>Management readout</h2>
+    <div id="managementSummary" class="summary">
+     <div class="summary-item"><strong>Current finding</strong><p>Run a batch or import verified prices to generate a commercial summary.</p></div>
+     <div class="summary-item"><strong>Decision guardrail</strong><p>Validate product equivalence and consider cancellation volume, order volume, delivery fees, and margin before recommending a price change.</p></div>
+    </div>
+   </section>
+  </section>
+ </div>
+</main>
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+let records = [], stopRequested = false, runActive = false;
+
+function parseNumber(v){
+ if(v===null||v===undefined||String(v).trim()==="") return null;
+ const n=Number(String(v).replace(/[,KES\s]/gi,"").replace(/^KSh/i,""));
+ return Number.isFinite(n)&&n>=0?n:null;
+}
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function validURL(s){try{const u=new URL(s);return u.protocol==="https:"||u.protocol==="http:"?u.href:"";}catch(e){return "";}}
+function link(url,label){const u=validURL(url);return u?`<a href="${escapeHTML(u)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>`:"";}
+function money(n){return n===null||n===undefined?"—":"KES "+n.toLocaleString("en-KE",{maximumFractionDigits:2});}
+function parseSkus(){const raw=$("skuInput").value.split(/[\n\r,;\t]+/).map(s=>s.trim()).filter(Boolean);const seen=new Set(),unique=[];raw.forEach(s=>{if(!seen.has(s.toLowerCase())){seen.add(s.toLowerCase());unique.push(s)}});return {raw:raw.length,unique};}
+function searchURL(site,term){const q=encodeURIComponent(term);if(site==="Jumia")return "https://www.jumia.co.ke/catalog/?q="+q;if(site==="Carrefour")return "https://www.carrefour.ke/mafken/en/search?keyword="+q;return "https://www.kilimall.co.ke/new/commoditysearch?keyword="+q;}
+function normalise(r){
+ const o={...r};
+ o.sku=String(o.sku||"").trim();o.product_name=o.product_name||"";o.jumia_price=parseNumber(o.jumia_price);o.carrefour_price=parseNumber(o.carrefour_price);o.kilimall_price=parseNumber(o.kilimall_price);
+ o.cancellation_count=parseNumber(o.cancellation_count);o.cancellation_reason=o.cancellation_reason||"Not supplied";
+ o.match_confidence=o.match_confidence||"Possible match — review required";
+ o.source_type=o.source_type||"Manual / imported";o.checked_at=o.checked_at||"Not recorded";
+ o.jumia_url=o.jumia_url||"";o.carrefour_url=o.carrefour_url||"";o.kilimall_url=o.kilimall_url||"";
+ o.retrieval_status=o.retrieval_status||"Awaiting price verification";
+ return o;
+}
+function assess(r){
+ const vals=[["Carrefour",r.carrefour_price,r.carrefour_url],["Kilimall",r.kilimall_price,r.kilimall_url]].filter(x=>x[1]!==null&&x[1]>0);
+ const trusted=["Exact match","High-confidence equivalent"].includes(r.match_confidence);
+ const comparable=trusted?vals:[];
+ const cheapest=comparable.sort((a,b)=>a[1]-b[1])[0]||null;
+ const gap=cheapest&&r.jumia_price!==null&&r.jumia_price>0?r.jumia_price-cheapest[1]:null;
+ const premium=gap!==null&&cheapest[1]>0?(gap/cheapest[1])*100:null;
+ const competitorCheaper=gap!==null&&gap>0;
+ const hasCancellation=r.cancellation_count!==null;
+ let action="Insufficient evidence",priority=4,reason="Verify product match and obtain comparable prices.";
+ if(competitorCheaper&&hasCancellation&&r.cancellation_count>=10){action="Immediate commercial investigation";priority=1;reason="Verified competitor undercut and elevated cancellation count; validate margin and order context."}
+ else if(competitorCheaper){action="Pricing review";priority=2;reason="Verified comparable competitor price is lower; assess materiality, delivery cost, and margin."}
+ else if(r.match_confidence==="Possible match — review required"||r.match_confidence==="Not comparable"){action="Product/journey review";priority=3;reason="Resolve product equivalence or investigate non-price drivers before drawing conclusions."}
+ else if(r.jumia_price!==null&&!vals.length){action="Insufficient evidence";priority=4;reason="Competitor price unavailable; use search links or import verified prices."}
+ else if(r.jumia_price!==null&&vals.length&&trusted){action="Monitor";priority=3;reason="No verified competitor undercut detected in the available data; continue monitoring."}
+ return {...r,cheapest,gap,premium,competitorCheaper,action,priority,reason};
+}
+function pill(text,cls=""){return `<span class="pill ${cls}">${escapeHTML(text)}</span>`;}
+function actionPill(r){return pill("P"+r.priority+" · "+r.action,r.priority===1?"bad":r.priority===2?"warn":r.priority===3?"blue":"");}
+function priceCell(price,url,site){
+ const val=price===null?"—":money(price);
+ const search=link(url,"Product page")||link(searchURL(site,""),"Search");
+ return `<div class="price">${val}</div>${url?`<div class="subtext">${link(url,"Open listing")}</div>`:""}`;
+}
+function render(){
+ const query=$("searchFilter").value.trim().toLowerCase(),mf=$("matchFilter").value,af=$("actionFilter").value;
+ const all=records.map(assess);
+ const filtered=all.filter(r=>(!query||(r.sku+" "+r.product_name).toLowerCase().includes(query))&&(mf==="all"||r.match_confidence===mf)&&(af==="all"||r.action===af));
+ $("mTotal").textContent=records.length;
+ $("mCheaper").textContent=all.filter(r=>r.competitorCheaper).length;
+ $("mMatched").textContent=all.filter(r=>["Exact match","High-confidence equivalent"].includes(r.match_confidence)).length;
+ $("mReview").textContent=all.filter(r=>r.action==="Insufficient evidence"||r.action==="Product/journey review").length;
+ $("mFailed").textContent=all.filter(r=>!r.jumia_price&&r.carrefour_price===null&&r.kilimall_price===null).length;
+ $("resultCount").textContent=filtered.length+" of "+records.length+" records";
+ if(!filtered.length){$("resultsBody").innerHTML=`<tr><td colspan="10"><div class="empty">No records match the current filters.</div></td></tr>`;renderSummary(all);return;}
+ filtered.sort((a,b)=>a.priority-b.priority||(b.premium??-Infinity)-(a.premium??-Infinity));
+ $("resultsBody").innerHTML=filtered.map(r=>{
+  const cheap=r.cheapest?`<strong>${escapeHTML(r.cheapest[0])}</strong><div class="price">${money(r.cheapest[1])}</div>`:"—";
+  const premium=r.premium===null?"—":`<span class="price ${r.premium>0?"negative":r.premium<0?"positive":"neutral"}">${r.premium.toFixed(1)}%</span><div class="subtext">${r.gap>0?money(r.gap)+" above":r.gap<0?money(Math.abs(r.gap))+" below":"Price parity"}</div>`;
+  const count=r.cancellation_count===null?"Not supplied":r.cancellation_count.toLocaleString();
+  const matchClass=r.match_confidence==="Exact match"||r.match_confidence==="High-confidence equivalent"?"good":r.match_confidence.startsWith("Possible")?"warn":"";
+  const src=`<div>${pill(r.source_type,r.source_type==="Sample data"?"warn":r.source_type==="Live retrieved"?"good":"blue")}</div><div class="subtext">${escapeHTML(r.checked_at)}</div><div class="subtext">${link(r.jumia_url,"Jumia")||link(searchURL("Jumia",r.sku),"Search Jumia")} · ${link(r.carrefour_url,"Carrefour")||link(searchURL("Carrefour",r.product_name||r.sku),"Search Carrefour")} · ${link(r.kilimall_url,"Kilimall")||link(searchURL("Kilimall",r.product_name||r.sku),"Search Kilimall")}</div>`;
+  return `<tr><td><div class="product">${escapeHTML(r.product_name||"Product not identified")}</div><div class="subtext">SKU: ${escapeHTML(r.sku)}</div><div class="subtext">${escapeHTML(r.cancellation_reason)}</div></td><td>${priceCell(r.jumia_price,r.jumia_url,"Jumia")}</td><td>${priceCell(r.carrefour_price,r.carrefour_url,"Carrefour")}</td><td>${priceCell(r.kilimall_price,r.kilimall_url,"Kilimall")}</td><td>${cheap}</td><td>${premium}</td><td>${pill(r.match_confidence,matchClass)}</td><td><strong>${escapeHTML(count)}</strong><div class="subtext">cancellations</div></td><td>${actionPill(r)}<div class="subtext">${escapeHTML(r.reason)}</div></td><td>${src}</td></tr>`;
+ }).join("");
+ renderSummary(all);
+}
+function renderSummary(all){
+ const undercuts=all.filter(r=>r.competitorCheaper).length;
+ const verified=all.filter(r=>r.cheapest).length;
+ const high=all.filter(r=>r.priority===1).length;
+ const reviews=all.filter(r=>r.action==="Insufficient evidence"||r.action==="Product/journey review").length;
+ $("managementSummary").innerHTML=`<div class="summary-item"><strong>Pricing signal</strong><p>${undercuts} of ${all.length} SKUs show a lower verified competitor price among comparable matches. ${verified} SKUs have a usable comparable competitor price.</p></div><div class="summary-item"><strong>Recommended next step</strong><p>${high} SKU(s) meet the current high-cancellation investigation rule. ${reviews} SKU(s) need more evidence or product/journey review. Confirm match quality, delivered price, margin, and cancellation/order denominators before presenting conclusions.</p></div>`;
+}
+function setProgress(done,total,msg){$("progressBar").style.width=(total?Math.round(done/total*100):0)+"%";$("progressText").textContent=`${done} of ${total} processed`;if(msg)$("runStatus").childNodes[0].textContent=msg;}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+async function runBatch(){
+ if(runActive)return;
+ const parsed=parseSkus();
+ if(!parsed.unique.length){$("runStatus").childNodes[0].textContent="Please enter at least one SKU.";return;}
+ runActive=true;stopRequested=false;$("runBtn").disabled=true;$("stopBtn").disabled=false;
+ const batch=parsed.unique;
+ try{const h=await fetch("/api/health");if(!h.ok)throw 0;}catch(e){
+  $("runStatus").childNodes[0].textContent="Backend not reachable. Start it with 'node server.js' and open http://localhost:3000 (this page cannot fetch prices on its own).";
+  runActive=false;$("runBtn").disabled=false;$("stopBtn").disabled=true;return;}
+ let done=0;
+ for(const sku of batch){
+  if(stopRequested)break;
+  setProgress(done,batch.length,`Checking ${sku} (${done+1} of ${batch.length}): Jumia lookup, then Carrefour and Kilimall...`);
+  const prev=records.find(r=>r.sku.toLowerCase()===sku.toLowerCase());
+  let rec;
+  try{const resp=await fetch("/api/check?sku="+encodeURIComponent(sku));const data=await resp.json();if(!resp.ok||data.error)throw new Error(data.error||"HTTP "+resp.status);
+   rec=normalise({...data,cancellation_count:prev?prev.cancellation_count:null,cancellation_reason:prev?prev.cancellation_reason:""});
+  }catch(err){rec=normalise({sku,source_type:"Live retrieved",checked_at:new Date().toLocaleString(),retrieval_status:"Check failed: "+err.message,match_confidence:"Not found"});}
+  records=records.filter(r=>r.sku.toLowerCase()!==sku.toLowerCase());records.push(rec);
+  done++;setProgress(done,batch.length);render();
+ }
+ runActive=false;$("runBtn").disabled=false;$("stopBtn").disabled=true;
+ $("runStatus").childNodes[0].textContent=stopRequested?`Batch stopped after ${done} SKU(s). Completed rows are preserved.`:`Done. ${done} SKU(s) checked automatically. Review any "Possible match" rows before acting.`;
+ setProgress(done,batch.length);render();
+}
+function csvEscape(v){const s=String(v??"");return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function downloadCSV(rows,filename){
+ if(!rows.length){alert("There are no results to export.");return;}
+ const cols=["sku","product_name","jumia_price","carrefour_price","kilimall_price","cancellation_count","cancellation_reason","match_confidence","source_type","checked_at","jumia_url","carrefour_url","kilimall_url","retrieval_status"];
+ const csv=[cols.join(","),...rows.map(r=>cols.map(c=>csvEscape(r[c])).join(","))].join("\r\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function parseCSV(text){
+ const rows=[];let row=[],field="",quoted=false;
+ for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}else{if(c==='"')quoted=true;else if(c===","){row.push(field);field="";}else if(c==="\n"){row.push(field);rows.push(row);row=[];field="";}else if(c!=="\r")field+=c;}}
+ if(field.length||row.length){row.push(field);rows.push(row);}
+ if(!rows.length)return [];
+ const headers=rows.shift().map(h=>h.trim().toLowerCase());
+ return rows.filter(r=>r.some(v=>v.trim())).map(r=>{const o={};headers.forEach((h,i)=>o[h]=(r[i]||"").trim());return o;}).filter(o=>o.sku);
+}
+$("runBtn").addEventListener("click",runBatch);
+$("stopBtn").addEventListener("click",()=>{stopRequested=true;$("stopBtn").disabled=true;});
+$("clearBtn").addEventListener("click",()=>{if(runActive)return;$("skuInput").value="";records=[];$("csvInput").value="";setProgress(0,0,"Cleared. Ready for a new batch.");render();});
+$("sampleBtn").addEventListener("click",()=>{
+ if(runActive)return;
+ $("skuInput").value="DEMO-SKU-001\nDEMO-SKU-002\nDEMO-SKU-003";
+ const now=new Date().toLocaleString();
+ records=[
+ normalise({sku:"DEMO-SKU-001",product_name:"SAMPLE ONLY — Example blender 1.5L",jumia_price:4500,carrefour_price:3999,kilimall_price:4250,cancellation_count:28,cancellation_reason:"Found a better offer",match_confidence:"High-confidence equivalent",source_type:"Sample data",checked_at:now,retrieval_status:"Mock values — not live",jumia_url:"",carrefour_url:"",kilimall_url:""}),
+ normalise({sku:"DEMO-SKU-002",product_name:"SAMPLE ONLY — Example wireless headphones",jumia_price:2800,carrefour_price:null,kilimall_price:3100,cancellation_count:7,cancellation_reason:"Not interested",match_confidence:"Possible match — review required",source_type:"Sample data",checked_at:now,retrieval_status:"Mock values — not live"}),
+ normalise({sku:"DEMO-SKU-003",product_name:"SAMPLE ONLY — Example kettle 1.7L",jumia_price:2200,carrefour_price:2200,kilimall_price:null,cancellation_count:3,cancellation_reason:"Duplicate order",match_confidence:"Exact match",source_type:"Sample data",checked_at:now,retrieval_status:"Mock values — not live"})
+ ];
+ $("runStatus").childNodes[0].textContent="Sample data loaded. All sample product names and prices are fictional; do not use them for business decisions.";
+ setProgress(3,3);render();
+});
+$("exportBtn").addEventListener("click",()=>downloadCSV(records.map(assess),"jumia_competitor_price_check.csv"));
+$("templateBtn").addEventListener("click",()=>{
+ const template="sku,product_name,jumia_price,carrefour_price,kilimall_price,cancellation_count,cancellation_reason,match_confidence,source_type,checked_at,jumia_url,carrefour_url,kilimall_url,retrieval_status\n";
+ const blob=new Blob(["\ufeff"+template],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="competitor_price_import_template.csv";a.click();URL.revokeObjectURL(url);
+});
+$("csvInput").addEventListener("change",async e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ try{const imported=parseCSV(await file.text()).map(r=>normalise({...r,source_type:"Imported CSV",retrieval_status:r.retrieval_status||"Imported; verify source and timestamp"}));
+ const map=new Map(records.map(r=>[r.sku.toLowerCase(),r]));imported.forEach(r=>map.set(r.sku.toLowerCase(),r));records=Array.from(map.values());
+ $("runStatus").childNodes[0].textContent=`Imported ${imported.length} SKU record(s). Imported values are not independently verified by this tool.`;setProgress(imported.length,imported.length);render();
+ }catch(err){$("runStatus").childNodes[0].textContent="CSV import failed. Check the file format and required SKU column."; }
+});
+["searchFilter","matchFilter","actionFilter"].forEach(id=>$(id).addEventListener(id==="searchFilter"?"input":"change",render));
+$("reportBtn").addEventListener("click",()=>{
+ if(!records.length){alert("There are no results to export.");return;}
+ const doc=document.documentElement.cloneNode(true);
+ const old=doc.querySelector("#preload");if(old)old.remove();
+ const pre=document.createElement("script");pre.id="preload";
+ pre.textContent="window.__PRELOAD__="+JSON.stringify({generated_at:window.__GENERATED__||new Date().toLocaleString(),records}).replace(/</g,"\\u003c")+";";
+ const main=[...doc.querySelectorAll("script")].find(x=>!x.id);doc.querySelector("body").insertBefore(pre,main);
+ const blob=new Blob(["<!DOCTYPE html>\n"+doc.outerHTML],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="jumia_competitor_pricing_report.html";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+function loadPayload(p){
+ records=(p.records||[]).map(normalise);window.__GENERATED__=p.generated_at||"";
+ if(p.generated_at)$("runStatus").childNodes[0].textContent="Showing results generated "+p.generated_at+". "+records.length+" SKU(s).";
+ setProgress(records.length,records.length);render();
+}
+if(window.__PRELOAD__){loadPayload(window.__PRELOAD__);}
+else if(location.protocol.startsWith("http")){fetch("results.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(p=>{if(p&&p.records&&p.records.length&&!records.length)loadPayload(p);}).catch(()=>{});}
+render();
+})();
+</script>
+</body>
+</html>

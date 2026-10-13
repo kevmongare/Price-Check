@@ -1,0 +1,7 @@
+{
+  "name": "jumia-price-check",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": { "start": "node server.js", "setup": "npx playwright install chromium" },
+  "dependencies": { "playwright": "^1.48.0" }
+}

@@ -190,7 +190,12 @@ async function runBatch(){
  runActive=true;stopRequested=false;$("runBtn").disabled=true;$("stopBtn").disabled=false;
  const batch=parsed.unique;
  try{const h=await fetch("/api/health");if(!h.ok)throw 0;}catch(e){
-  $("runStatus").childNodes[0].textContent="Backend not reachable. Start it with 'node server.js' and open http://localhost:3000 (this page cannot fetch prices on its own).";
+  const status=$("runStatus"),isGitHubPages=location.hostname.endsWith(".github.io");
+  status.childNodes[0].textContent=isGitHubPages
+   ?"GitHub Pages is static and cannot run price checks directly. Run this check using the "
+   :"Backend not reachable. Start it with 'node server.js' and open http://localhost:3000.";
+  const oldLink=status.querySelector(".workflow-link");if(oldLink)oldLink.remove();
+  if(isGitHubPages){const link=document.createElement("a");link.className="workflow-link";link.href="https://github.com/kevmongare/Price-Check/actions/workflows/price-check.yml";link.textContent="Competitor price check workflow";link.target="_blank";link.rel="noopener noreferrer";status.insertBefore(link,status.querySelector(".progress"));}
   runActive=false;$("runBtn").disabled=false;$("stopBtn").disabled=true;return;}
  let done=0;
  for(const sku of batch){

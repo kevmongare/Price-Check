@@ -33,10 +33,19 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm test
+      - name: Require ScraperAPI secret
+        env:
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+        run: |
+          if [ -z "$SCRAPER_API_KEY" ]; then
+            echo "::error::Set the SCRAPER_API_KEY repository secret before running the scraper."
+            exit 1
+          fi
       - run: npx playwright install --with-deps chromium
       - name: Run price check
         env:
           SKUS: ${{ github.event.inputs.skus }}
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
         run: node batch.js
       - name: Keep results as a downloadable artifact
         if: always()

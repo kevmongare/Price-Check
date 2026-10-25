@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 const { classify, classifyQueryMatch, isProductTitle, searchVariants, selectClosest, selectLowestPriceMatch } = require("../matching");
 const { buildScraperApiUrl } = require("../scraper-api");
+const { buildKilimallSearchUrl } = require("../lib");
 
 test("selects the closest Jumia result for a product-name query", () => {
   const unrelated = { title: "Samsung Galaxy A55 protective case", url: "https://www.jumia.co.ke/case" };
@@ -61,4 +62,12 @@ test("builds a rendered ScraperAPI request without altering the target URL", () 
   assert.equal(request.searchParams.get("url"), target);
   assert.equal(request.searchParams.get("render"), "true");
   assert.throws(() => buildScraperApiUrl(target, ""), /SCRAPER_API_KEY/);
+});
+
+test("builds Kilimall search URLs using its current search endpoint", () => {
+  const url = new URL(buildKilimallSearchUrl("Nunix 50x55 Free Standing Cooker"));
+  assert.equal(url.origin, "https://www.kilimall.co.ke");
+  assert.equal(url.pathname, "/search");
+  assert.equal(url.searchParams.get("q"), "Nunix 50x55 Free Standing Cooker");
+  assert.equal(url.searchParams.get("page"), "1");
 });

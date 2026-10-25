@@ -104,8 +104,14 @@ async function jumiaLookup(searchTerm) {
 // ---------- competitor search ----------
 const SITES = {
   Carrefour: { url: q => "https://www.carrefour.ke/mafken/en/search?keyword=" + encodeURIComponent(q), href: "/p/|/mafken/en/.*/p/" },
-  Kilimall:  { url: q => "https://www.kilimall.co.ke/new/commoditysearch?keyword=" + encodeURIComponent(q), href: "/listing/|/commodity/|/item/" },
+  Kilimall:  { url: q => buildKilimallSearchUrl(q), href: "/listing/|/commodity/|/item/" },
 };
+function buildKilimallSearchUrl(query) {
+  const url = new URL("https://www.kilimall.co.ke/search");
+  url.searchParams.set("q", query);
+  url.searchParams.set("page", "1");
+  return url.toString();
+}
 async function searchSite(site, query) {
   const cfg = SITES[site];
   return withPage(async page => {
@@ -190,4 +196,4 @@ async function checkSku(sku) {
 }
 
 async function closeBrowser() { if (browser) { await browser.close().catch(() => {}); browser = null; } }
-module.exports = { checkSku, checkWithPriceBaseline, closeBrowser };
+module.exports = { buildKilimallSearchUrl, checkSku, checkWithPriceBaseline, closeBrowser };

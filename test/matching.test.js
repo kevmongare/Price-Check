@@ -3,7 +3,7 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
 const { classify, classifyQueryMatch, isProductTitle, searchVariants, selectClosest, selectLowestPriceMatch } = require("../matching");
-const { buildScraperApiUrl } = require("../scraper-api");
+const { buildScraperApiUrl, redactScraperApiKey } = require("../scraper-api");
 const { buildKilimallSearchUrl } = require("../lib");
 
 test("selects the closest Jumia result for a product-name query", () => {
@@ -62,6 +62,15 @@ test("builds a rendered ScraperAPI request without altering the target URL", () 
   assert.equal(request.searchParams.get("url"), target);
   assert.equal(request.searchParams.get("render"), "true");
   assert.throws(() => buildScraperApiUrl(target, ""), /SCRAPER_API_KEY/);
+});
+
+test("redacts ScraperAPI keys from request error messages", () => {
+  const key = "test-secret-key";
+  const message = `request failed for https://api.scraperapi.com/?api_key=${key}&url=https%3A%2F%2Fexample.com`;
+  const safeMessage = redactScraperApiKey(message, key);
+  assert.ok(!safeMessage.includes(key));
+  assert.ok(safeMessage.includes("api_key=[REDACTED]"));
+  assert.ok(safeMessage.includes("request failed"));
 });
 
 test("builds Kilimall search URLs using its current search endpoint", () => {

@@ -5,7 +5,7 @@
 2. Repo Settings > Pages > Build and deployment > Source: **GitHub Actions**.
 3. To use your own prices as the Jumia baseline, add `products.csv` with the columns `sku,name,unit_price` (one product per row). The product name is searched on Carrefour and Kilimall, your unit price is used as the Jumia baseline, and the Jumia lookup is skipped. You can enter another repository-relative CSV path in the workflow's `products_csv` input. Otherwise, product names or SKUs in `skus.txt` (one per line) or the workflow's `skus` input keep the existing Jumia lookup behavior.
    Optional: fill `counts.csv` (sku,cancellation_count,cancellation_reason) to add cancellation volumes.
-4. Actions tab > "Competitor price check" > **Run workflow**. It also runs every Monday 05:00 Nairobi time (edit or delete the `schedule` block in `.github/workflows/price-check.yml`).
+4. Pushes to `main` and every Monday 05:00 Nairobi time automatically run the check; you can also start it from Actions > "Competitor price check" > **Run workflow** (edit or delete the `schedule` block in `.github/workflows/price-check.yml`).
 5. After ~15-20 min the dashboard is live at https://<your-username>.github.io/<repo>/ . Click **Download Report (HTML)** for a self-contained file you can email.
    The run also keeps `results.csv` / `results.json` as a downloadable artifact on the run page.
 

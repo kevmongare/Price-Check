@@ -8,6 +8,7 @@
 4. Pushes to `main` and every Monday 05:00 Nairobi time automatically run the check; you can also start it from Actions > "Competitor price check" > **Run workflow** (edit or delete the `schedule` block in `.github/workflows/price-check.yml`).
 5. After ~15-20 min the dashboard is live at https://<your-username>.github.io/<repo>/ . Click **Download Report (HTML)** for a self-contained file you can email.
    The run also keeps `results.csv` / `results.json` as a downloadable artifact on the run page.
+   If scraping fails, the workflow still publishes the updated dashboard and any results generated; the Actions run remains failed so the scraping issue is visible.
 
 Example `products.csv`:
 ```csv

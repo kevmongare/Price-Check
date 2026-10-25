@@ -50,11 +50,23 @@ jobs:
           fi
       - run: npx playwright install --with-deps chromium
       - name: Run price check
+        id: price-check
+        continue-on-error: true
         env:
           SKUS: ${{ github.event.inputs.skus }}
           PRODUCTS_CSV: ${{ github.event.inputs.products_csv }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
         run: node batch.js
+      - name: Ensure dashboard output exists
+        if: always()
+        run: |
+          if [ ! -s site/index.html ]; then
+            mkdir -p site
+            cp index.html site/index.html
+          fi
+          if [ ! -s site/results.json ]; then
+            printf '{"generated_at":"Price check failed; no fresh results were generated.","records":[]}\n' > site/results.json
+          fi
       - name: Keep results as a downloadable artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,3 +80,8 @@ jobs:
           path: site
       - id: deploy
         uses: actions/deploy-pages@v4
+      - name: Report price-check failure after publishing
+        if: steps.price-check.outcome == 'failure'
+        run: |
+          echo "::error::The dashboard was published, but the price check failed. See the Run price check step and downloadable artifact."
+          exit 1

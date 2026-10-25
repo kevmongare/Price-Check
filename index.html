@@ -86,10 +86,10 @@ main{max-width:1440px;margin:22px auto;padding:0 20px 36px}.banner{padding:13px 
     </div>
     <div class="table-wrap">
      <table><thead><tr>
-    <th>Search term / product</th><th>Jumia</th><th>Carrefour</th><th>Kilimall</th><th>Cheapest competitor</th><th>Jumia premium</th><th>Match</th><th>Cancellation impact</th><th>Priority / action</th><th>Sources / status</th>
+    <th>Search term / product</th><th>Jumia / baseline</th><th>Carrefour</th><th>Kilimall</th><th>Cheapest competitor</th><th>Baseline premium</th><th>Match</th><th>Cancellation impact</th><th>Priority / action</th><th>Sources / status</th>
      </tr></thead><tbody id="resultsBody"><tr><td colspan="10"><div class="empty">No results yet. Paste SKUs and run the batch, or load sample data to preview the dashboard.</div></td></tr></tbody></table>
     </div>
-    <div class="footnote">Price premium = (Jumia price − cheapest comparable competitor price) ÷ cheapest competitor price. Calculations are shown only when prices are positive numbers and a comparable match is confirmed. Shipping is excluded unless supplied as part of the price.</div>
+    <div class="footnote">Price premium = (baseline price − cheapest comparable competitor price) ÷ cheapest competitor price. The baseline is the retrieved Jumia price for ordinary SKU checks, or your supplied unit price for CSV checks (which skip the Jumia lookup). Calculations are shown only when prices are positive numbers and a comparable match is confirmed. Shipping is excluded unless supplied as part of the price.</div>
    </section>
    <section class="panel">
     <h2>Management readout</h2>
@@ -147,10 +147,10 @@ function assess(r){
 }
 function pill(text,cls=""){return `<span class="pill ${cls}">${escapeHTML(text)}</span>`;}
 function actionPill(r){return pill("P"+r.priority+" · "+r.action,r.priority===1?"bad":r.priority===2?"warn":r.priority===3?"blue":"");}
-function priceCell(price,url,site){
+function priceCell(price,url,site,note=""){
  const val=price===null?"—":money(price);
  const search=link(url,"Product page")||link(searchURL(site,""),"Search");
- return `<div class="price">${val}</div>${url?`<div class="subtext">${link(url,"Open listing")}</div>`:""}`;
+ return `<div class="price">${val}</div>${note?`<div class="subtext">${escapeHTML(note)}</div>`:""}${url?`<div class="subtext">${link(url,"Open listing")}</div>`:""}`;
 }
 function render(){
  const query=$("searchFilter").value.trim().toLowerCase(),mf=$("matchFilter").value,af=$("actionFilter").value;
@@ -160,7 +160,7 @@ function render(){
  $("mCheaper").textContent=all.filter(r=>r.competitorCheaper).length;
  $("mMatched").textContent=all.filter(r=>["Exact match","High-confidence equivalent"].includes(r.match_confidence)).length;
  $("mReview").textContent=all.filter(r=>r.action==="Insufficient evidence"||r.action==="Product/journey review").length;
- $("mFailed").textContent=all.filter(r=>!r.jumia_price&&r.carrefour_price===null&&r.kilimall_price===null).length;
+ $("mFailed").textContent=all.filter(r=>r.baseline_price_source?r.carrefour_price===null&&r.kilimall_price===null:!r.jumia_price&&r.carrefour_price===null&&r.kilimall_price===null).length;
  $("resultCount").textContent=filtered.length+" of "+records.length+" records";
  if(!filtered.length){$("resultsBody").innerHTML=`<tr><td colspan="10"><div class="empty">No records match the current filters.</div></td></tr>`;renderSummary(all);return;}
  filtered.sort((a,b)=>a.priority-b.priority||(b.premium??-Infinity)-(a.premium??-Infinity));
@@ -169,8 +169,9 @@ function render(){
   const premium=r.premium===null?"—":`<span class="price ${r.premium>0?"negative":r.premium<0?"positive":"neutral"}">${r.premium.toFixed(1)}%</span><div class="subtext">${r.gap>0?money(r.gap)+" above":r.gap<0?money(Math.abs(r.gap))+" below":"Price parity"}</div>`;
   const count=r.cancellation_count===null?"Not supplied":r.cancellation_count.toLocaleString();
   const matchClass=r.match_confidence==="Exact match"||r.match_confidence==="High-confidence equivalent"?"good":r.match_confidence.startsWith("Possible")?"warn":"";
-  const src=`<div>${pill(r.source_type,r.source_type==="Sample data"?"warn":r.source_type==="Live retrieved"?"good":"blue")}</div><div class="subtext">${escapeHTML(r.checked_at)}</div><div class="subtext">${link(r.jumia_url,"Jumia")||link(searchURL("Jumia",r.sku),"Search Jumia")} · ${link(r.carrefour_url,"Carrefour")||link(searchURL("Carrefour",r.product_name||r.sku),"Search Carrefour")} · ${link(r.kilimall_url,"Kilimall")||link(searchURL("Kilimall",r.product_name||r.sku),"Search Kilimall")}</div>`;
-    return `<tr><td><div class="product">${escapeHTML(r.product_name||"Product not identified")}</div><div class="subtext">Search: ${escapeHTML(r.sku)}</div><div class="subtext">${escapeHTML(r.cancellation_reason)}</div></td><td>${priceCell(r.jumia_price,r.jumia_url,"Jumia")}</td><td>${priceCell(r.carrefour_price,r.carrefour_url,"Carrefour")}</td><td>${priceCell(r.kilimall_price,r.kilimall_url,"Kilimall")}</td><td>${cheap}</td><td>${premium}</td><td>${r.query_match_confidence?`${pill("Competitor: "+r.match_confidence,matchClass)}<div class="subtext">Jumia: ${escapeHTML(r.query_match_confidence)}</div>`:pill(r.match_confidence,matchClass)}</td><td><strong>${escapeHTML(count)}</strong><div class="subtext">cancellations</div></td><td>${actionPill(r)}<div class="subtext">${escapeHTML(r.reason)}</div></td><td>${src}</td></tr>`;
+  const jumiaSource=r.baseline_price_source?"Jumia lookup skipped":link(r.jumia_url,"Jumia")||link(searchURL("Jumia",r.sku),"Search Jumia");
+  const src=`<div>${pill(r.source_type,r.source_type==="Sample data"?"warn":r.source_type==="Live retrieved"?"good":"blue")}</div><div class="subtext">${escapeHTML(r.checked_at)}</div><div class="subtext">${jumiaSource} · ${link(r.carrefour_url,"Carrefour")||link(searchURL("Carrefour",r.product_name||r.sku),"Search Carrefour")} · ${link(r.kilimall_url,"Kilimall")||link(searchURL("Kilimall",r.product_name||r.sku),"Search Kilimall")}</div>`;
+    return `<tr><td><div class="product">${escapeHTML(r.product_name||"Product not identified")}</div><div class="subtext">Search: ${escapeHTML(r.sku)}</div><div class="subtext">${escapeHTML(r.cancellation_reason)}</div></td><td>${priceCell(r.jumia_price,r.jumia_url,"Jumia",r.baseline_price_source?"Your unit price (CSV baseline; Jumia lookup skipped)":"")}</td><td>${priceCell(r.carrefour_price,r.carrefour_url,"Carrefour")}</td><td>${priceCell(r.kilimall_price,r.kilimall_url,"Kilimall")}</td><td>${cheap}</td><td>${premium}</td><td>${r.query_match_confidence?`${pill("Competitor: "+r.match_confidence,matchClass)}<div class="subtext">Jumia: ${escapeHTML(r.query_match_confidence)}</div>`:pill(r.match_confidence,matchClass)}</td><td><strong>${escapeHTML(count)}</strong><div class="subtext">cancellations</div></td><td>${actionPill(r)}<div class="subtext">${escapeHTML(r.reason)}</div></td><td>${src}</td></tr>`;
  }).join("");
  renderSummary(all);
 }
@@ -216,7 +217,7 @@ async function runBatch(){
 function csvEscape(v){const s=String(v??"");return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
 function downloadCSV(rows,filename){
  if(!rows.length){alert("There are no results to export.");return;}
- const cols=["search_term","sku","product_name","jumia_price","carrefour_price","kilimall_price","cancellation_count","cancellation_reason","match_confidence","source_type","checked_at","jumia_url","carrefour_url","kilimall_url","retrieval_status"];
+ const cols=["search_term","sku","product_name","jumia_price","baseline_price_source","carrefour_price","kilimall_price","cancellation_count","cancellation_reason","match_confidence","source_type","checked_at","jumia_url","carrefour_url","kilimall_url","retrieval_status"];
  const csv=[cols.join(","),...rows.map(r=>cols.map(c=>csvEscape(r[c])).join(","))].join("\r\n");
  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }

@@ -131,6 +131,39 @@ async function bestCandidate(site, jumiaTitle) {
   return { best, searchUrl: res.searchUrl, candidates: res.rows.length };
 }
 
+async function retrieveCompetitors(productTitle, out) {
+  const results = await Promise.all(Object.keys(SITES).map(async site => {
+    try { return [site, await bestCandidate(site, productTitle)]; }
+    catch (e) { return [site, { error: e.message }]; }
+  }));
+  let bestRank = 0, bestLabel = "Not found";
+  for (const [site, r] of results) {
+    const key = site.toLowerCase();
+    if (r.error) { out.notes.push(`${site}: failed (${r.error.slice(0, 60)})`); continue; }
+    if (!r.best) { out.notes.push(`${site}: no results`); continue; }
+    const label = classify(productTitle, r.best);
+    out[key + "_url"] = r.best.url;
+    if (label === "High-confidence equivalent") out[key + "_price"] = r.best.price;
+    else out.notes.push(`${site}: ${label} — "${r.best.title.slice(0, 60)}" KSh ${r.best.price} (not used in comparison)`);
+    if (RANK[label] > bestRank) { bestRank = RANK[label]; bestLabel = label; }
+  }
+  out.match_confidence = bestLabel;
+}
+
+async function checkWithPriceBaseline(sku, productName, unitPrice) {
+  const out = {
+    sku, search_term: productName, product_name: productName, jumia_price: unitPrice, jumia_url: "",
+    baseline_price_source: "Your unit price from products.csv; Jumia lookup skipped",
+    carrefour_price: null, carrefour_url: "", kilimall_price: null, kilimall_url: "",
+    match_confidence: "Not found", source_type: "CSV baseline + live competitors",
+    checked_at: new Date().toLocaleString("en-KE", { timeZone: "Africa/Nairobi" }),
+    retrieval_status: "", notes: [],
+  };
+  await retrieveCompetitors(productName, out);
+  out.retrieval_status = "CSV unit price used as the Jumia baseline; Jumia lookup skipped. " + out.notes.join(" | ");
+  return out;
+}
+
 // ---------- full check for one SKU ----------
 async function checkSku(sku) {
   const out = {
@@ -151,25 +184,10 @@ async function checkSku(sku) {
     return out;
   }
 
-  const results = await Promise.all(Object.keys(SITES).map(async site => {
-    try { return [site, await bestCandidate(site, j.title)]; }
-    catch (e) { return [site, { error: e.message }]; }
-  }));
-  let bestRank = 0, bestLabel = "Not found";
-  for (const [site, r] of results) {
-    const key = site.toLowerCase();
-    if (r.error) { out.notes.push(`${site}: failed (${r.error.slice(0, 60)})`); continue; }
-    if (!r.best) { out.notes.push(`${site}: no results`); continue; }
-    const label = classify(j.title, r.best);
-    out[key + "_url"] = r.best.url;
-    if (label === "High-confidence equivalent") out[key + "_price"] = r.best.price; // only trusted prices feed the comparison
-    else out.notes.push(`${site}: ${label} — "${r.best.title.slice(0, 60)}" KSh ${r.best.price} (not used in comparison)`);
-    if (RANK[label] > bestRank) { bestRank = RANK[label]; bestLabel = label; }
-  }
-  out.match_confidence = bestLabel;
+  await retrieveCompetitors(j.title, out);
   out.retrieval_status = "Auto-retrieved. " + out.notes.join(" | ");
   return out;
 }
 
 async function closeBrowser() { if (browser) { await browser.close().catch(() => {}); browser = null; } }
-module.exports = { checkSku, closeBrowser };
+module.exports = { checkSku, checkWithPriceBaseline, closeBrowser };

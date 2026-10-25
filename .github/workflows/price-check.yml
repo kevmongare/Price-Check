@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       skus:
-        description: "Product names or SKUs (comma or newline separated). Leave empty to use skus.txt"
+        description: "Product names or SKUs (comma or newline separated). Leave empty to use products.csv or skus.txt"
+        required: false
+        default: ""
+      products_csv:
+        description: "Repository-relative CSV path (sku,name,unit_price). Overrides SKUS."
         required: false
         default: ""
   schedule:
@@ -45,6 +49,7 @@ jobs:
       - name: Run price check
         env:
           SKUS: ${{ github.event.inputs.skus }}
+          PRODUCTS_CSV: ${{ github.event.inputs.products_csv }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
         run: node batch.js
       - name: Keep results as a downloadable artifact
